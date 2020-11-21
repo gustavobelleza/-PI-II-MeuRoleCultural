@@ -59,7 +59,7 @@ public class EventosController {
      * @return redireciona para tela inicial
      */
     @PostMapping("criarEvento")
-    public String criarEvento(){
+    public String criarEvento(Model model){
         return "redirect:/";
     }
 }
