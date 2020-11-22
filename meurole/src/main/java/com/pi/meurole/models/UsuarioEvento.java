@@ -21,4 +21,8 @@ public class UsuarioEvento {
     @ManyToOne
     @JoinColumn(name = "fkEvento", referencedColumnName = "EventoId")
     private Usuario fkEvento;
+
+    public int getId(){
+        return id;
+    }
 }

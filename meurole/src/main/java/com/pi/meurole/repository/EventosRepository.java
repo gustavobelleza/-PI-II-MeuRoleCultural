@@ -1,8 +1,13 @@
 package com.pi.meurole.repository;
 
+import com.pi.meurole.models.AmigoEvento;
 import com.pi.meurole.models.Evento;
+import com.pi.meurole.models.UsuarioEvento;
+
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import aj.org.objectweb.asm.Type;
 
 import javax.sql.DataSource;
 import java.time.LocalDateTime;
@@ -38,4 +43,18 @@ public class EventosRepository implements IEventosRepository{
         }
         return eventos;
     }
+
+    @Override
+    public void Criar(AmigoEvento amigoEvento){
+        jdbcTemplate.update(
+            "INSERT INTO AmigoEvento (UsuarioEventoId, AmigoUsuarioId) " + 
+            "VALUES (?, ?)", new Object[]{amigoEvento.getFkUsuarioEvento(), amigoEvento.getFkAmigo()});
+    }
+
+    public UsuarioEvento BuscarEvento(int idUsuario, int idEvento){
+        return jdbcTemplate.queryForObject(
+            "SELECT * FROM UsuarioEvento WHERE UsuarioId = ? AND EventoId == ?",
+             new Object[] {idUsuario, idEvento}, UsuarioEvento.class);
+    }
+
 }

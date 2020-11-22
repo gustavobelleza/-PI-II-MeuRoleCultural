@@ -21,13 +21,6 @@ import javax.servlet.http.HttpSession;
 @RequestMapping("/")
 public class TelaInicialController {
 
-    @Autowired
-    private final EventosRepository eventosRepository;
-
-    public TelaInicialController(EventosRepository eventosRepository){
-        this.eventosRepository = eventosRepository;
-    }
-
     /**
      * Verifica se o usuario já está logado. Apresenta uma tela
      * de acordo com estado do usuario.
@@ -44,20 +37,4 @@ public class TelaInicialController {
 
         return "home";
     }
-
-    /**
-     * Processa os dados dos eventos a serem buscados e redireciona o
-     * usuario para a tela de apresentação de eventos
-     * @param model dados dos eventos a serem apresentados
-     * @return controller para o qual será redirecionado.
-     */
-    @GetMapping("encontrarEventos")
-    public ModelAndView encontrarEventos(Model model){
-
-        var eventos = eventosRepository.BuscarEventos();
-        model.addAttribute("eventos", eventos);
-
-        return new ModelAndView("eventosDisponiveis", model.asMap());
-    }
-
 }
