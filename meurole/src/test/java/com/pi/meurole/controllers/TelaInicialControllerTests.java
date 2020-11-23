@@ -26,7 +26,7 @@ public class TelaInicialControllerTests {
 
     @Before
     public void before(){
-        controller = new TelaInicialController(eventosRepository);
+        controller = new TelaInicialController();
         MockitoAnnotations.initMocks(this);
     }
 

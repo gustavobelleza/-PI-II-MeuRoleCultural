@@ -44,14 +44,25 @@ public class EventosRepository implements IEventosRepository{
         return eventos;
     }
 
+    public void Criar(Evento evento){
+        jdbcTemplate.update(
+            "INSERT INTO Eventos " + 
+            "(EventoId, NomeEvento, DataInicio, DataFim, Endereco, MaxLotacao, " +
+            "MinLotacao, ClassificacaoEtaria, Gratuito, IdealizadorId) " + 
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", 
+            new Object[]{evento.getId(), evento.getNomeEvento(), evento.getDataInicio(), evento.getDataFim(),
+                evento.getEndereco(), evento.getMaxLotacao(), evento.getMinLotacao(), evento.getClassificacaoEtaria(),
+                evento.isGratuito(), evento.getFkIdealizador());
+    }
+
     @Override
     public void Criar(AmigoEvento amigoEvento){
         jdbcTemplate.update(
-            "INSERT INTO AmigoEvento (UsuarioEventoId, AmigoUsuarioId) " + 
-            "VALUES (?, ?)", new Object[]{amigoEvento.getFkUsuarioEvento(), amigoEvento.getFkAmigo()});
+            "INSERT INTO AmigoEvento (UsuarioEventoId, AmigoUsuarioId) VALUES (?, ?)", 
+            new Object[]{amigoEvento.getFkUsuarioEvento(), amigoEvento.getFkAmigo()});
     }
 
-    public UsuarioEvento BuscarEvento(int idUsuario, int idEvento){
+    public UsuarioEvento BuscarUsuarioEvento(int idUsuario, int idEvento){
         return jdbcTemplate.queryForObject(
             "SELECT * FROM UsuarioEvento WHERE UsuarioId = ? AND EventoId == ?",
              new Object[] {idUsuario, idEvento}, UsuarioEvento.class);

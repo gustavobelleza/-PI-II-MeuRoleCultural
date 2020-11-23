@@ -40,8 +40,6 @@ public class Evento {
     @Column(name = "Gratuito")
     private boolean gratuito;
 
-    @Column(name = "Gratuito")
-
     @ManyToOne
     @JoinColumn(name = "fkIdealizador", referencedColumnName = "IdealizadorId")
     private Idealizador fkIdealizador;

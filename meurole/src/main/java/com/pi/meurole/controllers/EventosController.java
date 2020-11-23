@@ -1,10 +1,13 @@
 package com.pi.meurole.controllers;
 
+import com.pi.meurole.exceptions.ForbbidenAccessError;
 import com.pi.meurole.models.AmigoEvento;
 import com.pi.meurole.models.Evento;
+import com.pi.meurole.models.Idealizador;
 import com.pi.meurole.models.Usuario;
 import com.pi.meurole.repository.EventosRepository;
 import com.pi.meurole.repository.IEventosRepository;
+import com.pi.meurole.repository.IUsuarioRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,8 +32,13 @@ public class EventosController {
     @Autowired
     private final IEventosRepository eventosRepository;
 
-    public EventosController(EventosRepository eventosRepository){
+
+    @Autowired
+    private final IUsuarioRepository usuarioRepository;
+    
+    public EventosController(IEventosRepository eventosRepository, IUsuarioRepository usuarioRepository)
         this.eventosRepository = eventosRepository;
+        this.usuarioRepository = usuarioRepository;
     }
 
     /**
@@ -59,7 +67,8 @@ public class EventosController {
     public String convidarAmigos(List<Usuario> usuarios, Evento evento, HttpSession session){
 
         var authUser = (Usuario) session.getAttribute("authUser");
-        var usuarioEvento = eventosRepository.BuscarEvento(authUser.getId(), evento.getId());
+        var usuarioEvento = eventosRepository
+            .BuscarUsuarioEvento(authUser.getId(), evento.getId());
 
         for (var usuario : usuarios){
 
@@ -80,18 +89,31 @@ public class EventosController {
      * @return tela e dados para criação de eventos.
      */
     @GetMapping("criarEvento")
-    public ModelAndView criarEvento(HttpSession httpSession){
-        return new ModelAndView("criarEvento");
+    public String criarEvento(HttpSession httpSession){
+        return "criarEvento";
     }
 
     /**
      * Processa os dados do evento criado e armazena no banco
      * de dados
-     * @param model dados o evento.
+     * @param evento dados o evento.
      * @return redireciona para tela inicial
      */
     @PostMapping("criarEvento")
-    public String criarEvento(Model model){
+    public String criarEvento(Evento evento, HttpSession session){
+        var authUser = (Usuario) session.getAttribute("authUser");
+
+        var idealizador = usuarioRepository.BuscarIdealizador(authUser.getId());
+
+        if (idealizador == null){
+            throw new ForbbidenAccessError();
+        }
+
+        if (evento != null){
+
+            eventosRepository.Criar(evento);
+        }
+
         return "redirect:/";
     }
 }

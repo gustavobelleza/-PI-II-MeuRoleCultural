@@ -20,9 +20,29 @@ public class UsuarioEvento {
 
     @ManyToOne
     @JoinColumn(name = "fkEvento", referencedColumnName = "EventoId")
-    private Usuario fkEvento;
+    private Evento fkEvento;
 
     public int getId(){
         return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
+    public Usuario getFkUsuario() {
+        return fkUsuario;
+    }
+
+    public void setFkUsuario(Usuario u){
+        this.fkUsuario = u;
+    }
+
+    public Evento getFkEvento(){
+        return fkEvento;
+    }
+
+    public void setFkEvento(Evento evento){
+        this.fkEvento = evento;
     }
 }
